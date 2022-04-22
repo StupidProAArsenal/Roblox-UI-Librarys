@@ -407,6 +407,7 @@ function Library:CreateWindow(Title, gameName)
 	end
 	
 	function EpicStuffs:CreateTextBox(name, placeholder, clear, callback)
+		clear = clear or true
 		callback = callback or function() end
 		
 		local TextBoxHolder = Instance.new("Frame")
