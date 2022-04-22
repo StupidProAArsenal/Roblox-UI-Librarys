@@ -3,8 +3,8 @@ local Library = {}
 function Library:CreateWindow(Title, gameName)
 	
 	pcall(function()
-	if game.Players.LocalPlayer:FindFirstChild("UILibrary") then
-	game.Players.LocalPlayer:FindFirstChild("UILibrary"):Destroy()
+	if game.CoreGui:FindFirstChild("UILibrary") then
+	game.CoreGui:FindFirstChild("UILibrary"):Destroy()
 	end
 	end)
 	
@@ -17,7 +17,7 @@ function Library:CreateWindow(Title, gameName)
 
 	
 	UILibrary.Name = "UILibrary"
-	UILibrary.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	UILibrary.Parent = game.CoreGui
 	UILibrary.ResetOnSpawn = false
 
 	Main.Name = "Main"
