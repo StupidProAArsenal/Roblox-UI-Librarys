@@ -535,7 +535,7 @@ function Library:CreateWindow(Title, gameName)
 
 		Toggle.MouseButton1Click:Connect(function()
 			tog = not tog
-			callback(tog)
+			pcall(callback, tog)
 			if tog then 
 				game.TweenService:Create(Toggle, TweenInfo.new(0.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
 					BackgroundColor3 = Color3.fromRGB(0, 255, 0)
