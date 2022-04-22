@@ -255,7 +255,7 @@ function Library:CreateWindow(Title, gameName)
 		
 		DestroyGui.MouseButton1Up:Connect(function()
 			pcall(function()
-				game.Players.LocalPlayer.PlayerGui.UILibrary:Destroy()
+				game.CoreGui:FindFirstChild("UILibrary"):Destroy()
 			end)
 		end)
 	end
