@@ -546,7 +546,9 @@ function Library:CreateWindow(Title, gameName)
 	end
 	
 	function EpicStuffs:ApplyLib()
-		return Library
+		return
 	end
 	return EpicStuffs
 end
+
+return Library
