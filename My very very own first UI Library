@@ -1,0 +1,552 @@
+local Library = {}
+
+function Library:CreateWindow(Title, gameName)
+	
+	pcall(function()
+	if game.Players.LocalPlayer:FindFirstChild("UILibrary") then
+	game.Players.LocalPlayer:FindFirstChild("UILibrary"):Destroy()
+	end
+	end)
+	
+	local UILibrary = Instance.new("ScreenGui")
+	local Main = Instance.new("ImageLabel")
+	local GameName = Instance.new("TextLabel")
+	local UIName = Instance.new("TextLabel")
+	local TabPlusElements = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+
+	
+	UILibrary.Name = "UILibrary"
+	UILibrary.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	UILibrary.ResetOnSpawn = false
+
+	Main.Name = "Main"
+	Main.Parent = UILibrary
+	Main.AnchorPoint = Vector2.new(0.5, 0.5)
+	Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Main.BackgroundTransparency = 1.000
+	Main.Position = UDim2.new(0.5, 0, 0.499005973, 0)
+	Main.Size = UDim2.new(0, 344, 0, 329)
+	Main.Image = "rbxassetid://3570695787"
+	Main.ImageColor3 = Color3.fromRGB(34, 34, 34)
+	Main.ScaleType = Enum.ScaleType.Slice
+	Main.SliceCenter = Rect.new(100, 100, 100, 100)
+	Main.SliceScale = 0.060
+
+	GameName.Name = "GameName"
+	GameName.Parent = Main
+	GameName.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	GameName.BackgroundTransparency = 1.000
+	GameName.BorderSizePixel = 0
+	GameName.Position = UDim2.new(0.00290617626, 0, 0.103040285, 0)
+	GameName.Size = UDim2.new(0, 343, 0, 22)
+	GameName.Font = Enum.Font.SourceSans
+	GameName.Text = gameName
+	GameName.TextColor3 = Color3.fromRGB(118, 118, 118)
+	GameName.TextScaled = true
+	GameName.TextSize = 14.000
+	GameName.TextWrapped = true
+
+	UIName.Name = "UIName"
+	UIName.Parent = Main
+	UIName.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	UIName.BackgroundTransparency = 1.000
+	UIName.BorderSizePixel = 0
+	UIName.Position = UDim2.new(4.4344052e-08, 0, 0, 0)
+	UIName.Size = UDim2.new(0, 344, 0, 34)
+	UIName.Font = Enum.Font.SourceSans
+	UIName.Text = Title
+	UIName.TextColor3 = Color3.fromRGB(255, 255, 255)
+	UIName.TextScaled = true
+	UIName.TextSize = 14.000
+	UIName.TextWrapped = true
+
+	TabPlusElements.Name = "TabPlusElements"
+	TabPlusElements.Parent = Main
+	TabPlusElements.Active = true
+	TabPlusElements.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	TabPlusElements.BorderSizePixel = 0
+	TabPlusElements.Position = UDim2.new(0.0145348841, 0, 0.197568387, 0)
+	TabPlusElements.Size = UDim2.new(0, 334, 0, 257)
+	TabPlusElements.CanvasPosition = Vector2.new(0, 0)
+	TabPlusElements.CanvasSize = UDim2.new(0, 0, 2, 0)
+	TabPlusElements.ScrollBarThickness = 10
+	TabPlusElements.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	
+
+	UIListLayout.Parent = TabPlusElements
+	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 8)
+	
+	-- all scripts
+	
+	local UserInputService = game:GetService("UserInputService")
+	local GUI = Main
+
+	_G.ToggleKey = "LeftControl"
+	
+	local yes = false
+
+	function onKeyPress(inputObject, gameProcessedEvent)
+		if not gameProcessedEvent then
+			if inputObject.KeyCode == Enum.KeyCode[_G.ToggleKey] then
+				yes = true
+				if GUI.Visible == false and yes == true then
+					yes = false
+					GUI:TweenSize(UDim2.new(0, 344,0, 329), "Out", "Quad", 0.6)
+					GUI.Visible = true
+					task.wait(0.6)
+					TabPlusElements.Visible = true
+					GameName.Visible = true
+					UIName.Visible = true
+					for i,v in pairs(TabPlusElements:GetChildren()) do
+						if v.Name == "UIListLayout" then
+						else
+							v.Visible = true
+						end
+					end
+					wait(0.3)
+					yes = true
+				else
+					yes = false
+					GUI:TweenSize(UDim2.new(0, 0,0, 329), "Out", "Quad", 0.4)
+					TabPlusElements.Visible = false
+					GameName.Visible = false
+					UIName.Visible = false
+					for i,v in pairs(TabPlusElements:GetChildren()) do
+						if v.Name == "UIListLayout" then
+						else
+							v.Visible = false
+						end
+					end
+					task.wait(0.4)
+					GUI.Visible = false
+					wait(0.3)
+					yes = true
+				end
+			end
+		end
+	end
+
+	UserInputService.InputBegan:connect(onKeyPress)
+	
+	local UIS = game:GetService("UserInputService")
+	function dragify(Frame)
+		dragToggle = nil
+		local dragSpeed = 0.50
+		dragInput = nil
+		dragStart = nil
+		local dragPos = nil
+		function updateInput(input)
+			local Delta = input.Position - dragStart
+			local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+			game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.30), {Position = Position}):Play()
+		end
+		Frame.InputBegan:Connect(function(input)
+			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+				dragToggle = true
+				dragStart = input.Position
+				startPos = Frame.Position
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragToggle = false
+					end
+				end)
+			end
+		end)
+		Frame.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+				dragInput = input
+			end
+		end)
+		game:GetService("UserInputService").InputChanged:Connect(function(input)
+			if input == dragInput and dragToggle then
+				updateInput(input)
+			end
+		end)
+	end
+
+	dragify(Main)
+	
+	local EpicStuffs = {}
+	
+	function EpicStuffs:CreateTab(Name)
+		local TabName = Instance.new("TextLabel")
+
+		TabName.Name = "TabName"
+		TabName.Parent = TabPlusElements
+		TabName.BackgroundColor3 = Color3.fromRGB(39, 39, 39)
+		TabName.BorderSizePixel = 0
+		TabName.Position = UDim2.new(-0.112275451, 0, 0, 0)
+		TabName.Size = UDim2.new(0, 467, 0, 31)
+		TabName.Font = Enum.Font.SourceSans
+		TabName.Text = Name
+		TabName.TextColor3 = Color3.fromRGB(148, 148, 148)
+		TabName.TextScaled = true
+		TabName.TextSize = 14.000
+		TabName.TextWrapped = true
+	end
+	
+	function EpicStuffs:CreateButton(Name, callback)
+		callback = callback or function() end
+		
+		local TextButton = Instance.new("TextButton")
+		local UICorner = Instance.new("UICorner")
+		
+		TextButton.Parent = TabPlusElements
+		TextButton.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		TextButton.BorderSizePixel = 0
+		TextButton.Position = UDim2.new(0.0538922139, 0, 0.163424119, 0)
+		TextButton.Size = UDim2.new(0, 298, 0, 31)
+		TextButton.Font = Enum.Font.SourceSans
+		TextButton.Text = Name
+		TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+		TextButton.TextScaled = true
+		TextButton.TextSize = 14.000
+		TextButton.TextWrapped = true
+		TextButton.MouseButton1Click:Connect(function()
+			callback()
+		end)
+		
+		UICorner.CornerRadius = UDim.new(0, 6)
+		UICorner.Parent = TextButton
+	end
+	
+	function EpicStuffs:CreateLabel(Name)
+		
+		local Label = Instance.new("TextLabel")
+		
+		Label.Name = "Label"
+		Label.Parent = TabPlusElements
+		Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Label.BackgroundTransparency = 1.000
+		Label.Position = UDim2.new(0.0239520967, 0, 0.305212826, 0)
+		Label.Size = UDim2.new(0, 310, 0, 35)
+		Label.Font = Enum.Font.SourceSans
+		Label.Text = Name
+		Label.TextColor3 = Color3.fromRGB(129, 129, 129)
+		Label.TextScaled = true
+		Label.TextSize = 14.000
+		Label.TextWrapped = true
+	end
+	
+	function EpicStuffs:DestroyGui()
+
+		local DestroyGui = Instance.new("TextButton")
+
+		local UICorner_2 = Instance.new("UICorner")
+
+		DestroyGui.Name = "DestroyGui"
+		DestroyGui.Parent = TabPlusElements
+		DestroyGui.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		DestroyGui.BorderSizePixel = 0
+		DestroyGui.Position = UDim2.new(0.0538922139, 0, 0.394688934, 0)
+		DestroyGui.Size = UDim2.new(0, 298, 0, 31)
+		DestroyGui.Font = Enum.Font.SourceSans
+		DestroyGui.Text = "Destroy Gui"
+		DestroyGui.TextColor3 = Color3.fromRGB(255, 255, 255)
+		DestroyGui.TextScaled = true
+		DestroyGui.TextSize = 14.000
+		DestroyGui.TextWrapped = true
+		
+		UICorner_2.CornerRadius = UDim.new(0, 6)
+		UICorner_2.Parent = DestroyGui
+		
+		DestroyGui.MouseButton1Up:Connect(function()
+			pcall(function()
+				game.Players.LocalPlayer.PlayerGui.UILibrary:Destroy()
+			end)
+		end)
+	end
+	
+	function EpicStuffs:CreateSlider(Name, minValue, maxValue,  callback)
+		_G.SliderValue = 0
+		
+		callback = callback or function() end
+		
+		local SliderHolder = Instance.new("Frame")
+		local Slider = Instance.new("Frame")
+		local UICorner_3 = Instance.new("UICorner")
+		local Knob = Instance.new("TextButton")
+		local UICorner_4 = Instance.new("UICorner")
+		local Value = Instance.new("TextLabel")
+		local Title = Instance.new("TextLabel")
+
+		local UICorner_5 = Instance.new("UICorner")
+		
+		
+		SliderHolder.Name = "SliderHolder"
+		SliderHolder.Parent = TabPlusElements
+		SliderHolder.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		SliderHolder.BackgroundTransparency = 0.300
+		SliderHolder.BorderColor3 = Color3.fromRGB(64, 64, 64)
+		SliderHolder.BorderSizePixel = 0
+		SliderHolder.Position = UDim2.new(0.203592807, -50, 1.51361871, -200)
+		SliderHolder.Size = UDim2.new(0, 298, 0, 75)
+
+		Slider.Name = "Slider"
+		Slider.Parent = SliderHolder
+		Slider.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+		Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		Slider.BorderSizePixel = 0
+		Slider.Position = UDim2.new(0.0771812052, 0, 0.483238518, 0)
+		Slider.Size = UDim2.new(0.84563756, 0, 0.217741966, 0)
+
+		UICorner_3.CornerRadius = UDim.new(999, 999)
+		UICorner_3.Parent = Slider
+
+		Knob.Name = "Knob"
+		Knob.Parent = Slider
+		Knob.BackgroundColor3 = Color3.fromRGB(99, 99, 99)
+		Knob.BorderSizePixel = 0
+		Knob.Position = UDim2.new(-0.0357142836, 0, -0.221313745, 0)
+		Knob.Size = UDim2.new(0, 22, 0, 22)
+		Knob.AutoButtonColor = false
+		Knob.Font = Enum.Font.SourceSans
+		Knob.Text = ""
+		Knob.TextColor3 = Color3.fromRGB(0, 0, 0)
+		Knob.TextSize = 14.000
+
+		UICorner_4.CornerRadius = UDim.new(999, 999)
+		UICorner_4.Parent = Knob
+
+		Value.Name = "Value"
+		Value.Parent = Slider
+		Value.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Value.BackgroundTransparency = 1.000
+		Value.Position = UDim2.new(-0.0912698433, 0, 1.09450245, 0)
+		Value.Size = UDim2.new(1.1825397, 0, 1.25265574, 0)
+		Value.Visible = false
+		Value.Font = Enum.Font.SourceSans
+		Value.Text = "0"
+		Value.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Value.TextScaled = true
+		Value.TextSize = 14.000
+		Value.TextWrapped = true
+
+		Title.Name = "Title"
+		Title.Parent = Slider
+		Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Title.BackgroundTransparency = 1.000
+		Title.Position = UDim2.new(-0.0912698433, 0, -2.21931744, 0)
+		Title.Size = UDim2.new(1.1825397, 0, 1.81430042, 0)
+		Title.Font = Enum.Font.SourceSans
+		Title.Text = Name
+		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Title.TextScaled = true
+		Title.TextSize = 14.000
+		Title.TextWrapped = true
+
+		UICorner_5.CornerRadius = UDim.new(0, 6)
+		UICorner_5.Parent = SliderHolder
+		
+		local ValueChanged = Instance.new("BindableEvent")
+		ValueChanged.Parent = Slider
+		
+		local Bar = Slider
+		local knob = Bar.Knob;
+		local valueChangedEvent = ValueChanged;
+		local startXScale = -.05;
+		local endXScale = .95;
+		local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+
+		local prevValue = nil;
+		local function Update()
+			local absPosition = Bar.AbsolutePosition.X;
+			local absSize = Bar.AbsoluteSize.X;
+			local mouseDelta = math.min(math.max(0, mouse.X - absPosition), absSize);
+			local value = minValue + ((mouseDelta / absSize) * (maxValue - minValue));
+			knob.Position = UDim2.new((mouseDelta / absSize) - .05, knob.Position.X.Offset, knob.Position.Y.Scale, knob.Position.Y.Offset);
+			Value.Visible = true
+			Value.Text = value
+			if (prevValue ~= nil and math.floor(prevValue) ~= math.floor(value)) then
+				valueChangedEvent:Fire(prevValue, math.floor(value));
+				prevValue = math.floor(value);
+			else
+				prevValue = math.floor(value);
+			end
+		end
+
+		local keepUpdating = false;
+		local function Updater()
+			while (true) do
+				if (keepUpdating) then
+					Update()
+					_G.SliderValue = Value.Text
+					callback(_G.SliderValue)
+				end
+				task.wait()
+			end
+		end
+		local taskCoro = coroutine.create(Updater)
+		coroutine.resume(taskCoro);
+
+		local visible = false
+
+		knob.MouseButton1Down:Connect(function()
+			keepUpdating = true;
+		end)
+		local UserInputService = game:GetService("UserInputService")
+		UserInputService.InputEnded:Connect(function(inputObject)
+			if inputObject.UserInputType == Enum.UserInputType.MouseButton1 then
+				keepUpdating = false;
+
+				if visible == false then
+					visible = true
+					task.wait(3)
+					Value.Visible = false;
+					visible = false
+				else
+				end
+
+
+			end
+		end)
+
+	end
+	
+	function EpicStuffs:CreateTextBox(name, placeholder, clear, callback)
+		callback = callback or function() end
+		
+		local TextBoxHolder = Instance.new("Frame")
+		local UICorner_6 = Instance.new("UICorner")
+		local Title_2 = Instance.new("TextLabel")
+		local TextBox = Instance.new("TextBox")
+		local UICorner_7 = Instance.new("UICorner")
+		
+		TextBoxHolder.Name = "TextBoxHolder"
+		TextBoxHolder.Parent = TabPlusElements
+		TextBoxHolder.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		TextBoxHolder.BackgroundTransparency = 0.300
+		TextBoxHolder.BorderColor3 = Color3.fromRGB(64, 64, 64)
+		TextBoxHolder.BorderSizePixel = 0
+		TextBoxHolder.Position = UDim2.new(0.203592807, -50, 1.51361871, -200)
+		TextBoxHolder.Size = UDim2.new(0, 298, 0, 75)
+
+		UICorner_6.CornerRadius = UDim.new(0, 6)
+		UICorner_6.Parent = TextBoxHolder
+
+		Title_2.Name = "Title"
+		Title_2.Parent = TextBoxHolder
+		Title_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Title_2.BackgroundTransparency = 1.000
+		Title_2.Position = UDim2.new(-5.12039904e-08, 0, 4.06901052e-07, 0)
+		Title_2.Size = UDim2.new(0.997310042, 0, 0.394982845, 0)
+		Title_2.Font = Enum.Font.SourceSans
+		Title_2.Text = name
+		Title_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Title_2.TextScaled = true
+		Title_2.TextSize = 14.000
+		Title_2.TextWrapped = true
+
+		TextBox.Parent = TextBoxHolder
+		TextBox.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+		TextBox.Position = UDim2.new(0.0268456377, 0, 0.474983305, 0)
+		TextBox.Size = UDim2.new(0, 283, 0, 32)
+		TextBox.Font = Enum.Font.SourceSans
+		TextBox.PlaceholderText = placeholder or "Type Here"
+		TextBox.Text = ""
+		TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+		TextBox.TextScaled = true
+		TextBox.TextSize = 14.000
+		TextBox.TextWrapped = true
+		TextBox.ClearTextOnFocus = clear or true
+		TextBox.Focused:Connect(function()
+			TextBox.FocusLost:Connect(function()
+				callback(TextBox.Text)
+			end)
+		end)
+
+		UICorner_7.CornerRadius = UDim.new(0, 6)
+		UICorner_7.Parent = TextBox
+	end
+	
+	function EpicStuffs:CreateToggle(name, callback)
+		callback = callback or function() end
+		
+
+		local ToggleHolder = Instance.new("Frame")
+		local UICorner_8 = Instance.new("UICorner")
+		local Toggle = Instance.new("TextButton")
+		local UICorner_9 = Instance.new("UICorner")
+		local ToggleBox = Instance.new("Frame")
+		local UICorner_10 = Instance.new("UICorner")
+		local Title_3 = Instance.new("TextLabel")
+		
+		ToggleHolder.Name = "ToggleHolder"
+		ToggleHolder.Parent = TabPlusElements
+		ToggleHolder.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		ToggleHolder.BackgroundTransparency = 0.300
+		ToggleHolder.BorderColor3 = Color3.fromRGB(64, 64, 64)
+		ToggleHolder.BorderSizePixel = 0
+		ToggleHolder.Position = UDim2.new(0.203592807, -50, 1.47859919, -200)
+		ToggleHolder.Size = UDim2.new(0, 298, 0, 65)
+
+		UICorner_8.CornerRadius = UDim.new(0, 6)
+		UICorner_8.Parent = ToggleHolder
+
+		Toggle.Name = "Toggle"
+		Toggle.Parent = ToggleHolder
+		Toggle.BackgroundColor3 = Color3.fromRGB(227, 0, 0)
+		Toggle.BorderSizePixel = 0
+		Toggle.Position = UDim2.new(0.835570455, 0, 0.244088039, 0)
+		Toggle.Size = UDim2.new(0, 32, 0, 33)
+		Toggle.ZIndex = 2
+		Toggle.Font = Enum.Font.SourceSans
+		Toggle.Text = ""
+		Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+		Toggle.TextSize = 14.000
+
+		UICorner_9.CornerRadius = UDim.new(999, 999)
+		UICorner_9.Parent = Toggle
+
+		ToggleBox.Name = "ToggleBox"
+		ToggleBox.Parent = ToggleHolder
+		ToggleBox.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+		ToggleBox.BackgroundTransparency = 1
+		ToggleBox.BorderColor3 = Color3.fromRGB(64, 64, 64)
+		ToggleBox.BorderSizePixel = 0
+		ToggleBox.Position = UDim2.new(0.191275164, -50, 3.2440877, -200)
+		ToggleBox.Size = UDim2.new(0, 282, 0, 43)
+
+		UICorner_10.CornerRadius = UDim.new(0, 6)
+		UICorner_10.Parent = ToggleBox
+
+		Title_3.Name = "Title"
+		Title_3.Parent = ToggleHolder
+		Title_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Title_3.BackgroundTransparency = 1.000
+		Title_3.Position = UDim2.new(0.0268456377, 0, 0.230318069, 0)
+		Title_3.Size = UDim2.new(0.757888854, 0, 0.517176688, 0)
+		Title_3.ZIndex = 2
+		Title_3.Font = Enum.Font.SourceSans
+		Title_3.Text = name
+		Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Title_3.TextScaled = true
+		Title_3.TextSize = 14.000
+		Title_3.TextWrapped = true
+		Title_3.TextXAlignment = Enum.TextXAlignment.Left
+		
+		local tog = false
+
+		Toggle.MouseButton1Click:Connect(function()
+			tog = not tog
+			callback(tog)
+			if tog then 
+				game.TweenService:Create(Toggle, TweenInfo.new(0.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+					BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+				}):Play()
+			else
+				game.TweenService:Create(Toggle, TweenInfo.new(0.15, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+					BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+				}):Play()
+			end
+		end)
+	end
+	
+	function EpicStuffs:ApplyLib()
+		return Library
+	end
+	return EpicStuffs
+end
