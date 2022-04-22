@@ -1,3 +1,3 @@
 # Roblox UI Librarys
 
-ALL are pasted from https://forum.robloxscripts.com/
+ALL are from https://forum.robloxscripts.com/
